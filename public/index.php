@@ -34,7 +34,7 @@ require __DIR__.'/../vendor/autoload.php';
 | the responses back to the browser and delight our users.
 |
 */
-
+// 服务容器实例化与基本注册
 $app = require_once __DIR__.'/../bootstrap/app.php';
 
 /*
@@ -48,10 +48,13 @@ $app = require_once __DIR__.'/../bootstrap/app.php';
 | and wonderful application we have prepared for them.
 |
 */
-
+// 核心类生成
 $kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
 
+// 捕捉http请求
+// 通过$kernel的handler()方法处理请求实例
 $response = $kernel->handle(
+    // 将请求转化为请求实例
     $request = Illuminate\Http\Request::capture()
 );
 

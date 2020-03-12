@@ -232,6 +232,7 @@ class Request
      */
     public function __construct(array $query = [], array $request = [], array $attributes = [], array $cookies = [], array $files = [], array $server = [], $content = null)
     {
+        // 初始化请求实例的参数
         $this->initialize($query, $request, $attributes, $cookies, $files, $server, $content);
     }
 
@@ -273,7 +274,7 @@ class Request
 
     /**
      * Creates a new request with values from PHP's super globals.
-     *
+     * 通过php全局变量创建一个新的请求实例
      * @return static
      */
     public static function createFromGlobals()
@@ -1940,6 +1941,7 @@ class Request
 
     private static function createRequestFromFactory(array $query = [], array $request = [], array $attributes = [], array $cookies = [], array $files = [], array $server = [], $content = null)
     {
+        // 请求创建工厂
         if (self::$requestFactory) {
             $request = (self::$requestFactory)($query, $request, $attributes, $cookies, $files, $server, $content);
 

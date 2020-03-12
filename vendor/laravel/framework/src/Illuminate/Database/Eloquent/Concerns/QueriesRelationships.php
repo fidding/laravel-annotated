@@ -347,7 +347,7 @@ trait QueriesRelationships
 
     /**
      * Add subselect queries to count the relations.
-     *
+     * 添加一个资产寻计算关联关系
      * @param  mixed  $relations
      * @return $this
      */

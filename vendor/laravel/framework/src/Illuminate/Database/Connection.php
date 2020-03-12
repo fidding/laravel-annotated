@@ -271,7 +271,7 @@ class Connection implements ConnectionInterface
 
     /**
      * Get a new query builder instance.
-     *
+     * 获取一个查询构造器实例
      * @return \Illuminate\Database\Query\Builder
      */
     public function query()

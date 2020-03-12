@@ -385,7 +385,7 @@ class Container implements ArrayAccess, ContainerContract
 
     /**
      * Register an existing instance as shared in the container.
-     *
+     * 向容器中注册一个已经实例化的共享实例
      * @param  string  $abstract
      * @param  mixed   $instance
      * @return mixed

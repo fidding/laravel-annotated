@@ -45,7 +45,7 @@ class AliasLoader
 
     /**
      * Get or create the singleton alias loader instance.
-     *
+     * 获取或创建一个外观别名的单例对象
      * @param  array  $aliases
      * @return \Illuminate\Foundation\AliasLoader
      */
@@ -64,7 +64,7 @@ class AliasLoader
 
     /**
      * Load a class alias if it is registered.
-     *
+     * 加载一个类的别名
      * @param  string  $alias
      * @return bool|null
      */
@@ -145,7 +145,7 @@ class AliasLoader
 
     /**
      * Register the loader on the auto-loader stack.
-     *
+     * 在自动加载栈中注册一个自动加载函数
      * @return void
      */
     public function register()
@@ -159,11 +159,14 @@ class AliasLoader
 
     /**
      * Prepend the load method to the auto-loader stack.
-     *
+     * 将自动加载函数加到自动加载栈的开始处
      * @return void
      */
     protected function prependToLoaderStack()
     {
+        // 将load方法加载到自动加载栈的开始处
+        // composer提供的自动加载方法和外观自动加载方法都注册在这个栈里, 而且外观自动加载在最前面, 
+        // 因此当一个类实现自动加载时会按照自动加载栈的顺序加载, 即所有类的自动加载会先经过外观自动加载函数处理
         spl_autoload_register([$this, 'load'], true, true);
     }
 

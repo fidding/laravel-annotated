@@ -49,13 +49,13 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
 
     /**
      * Create a new Illuminate HTTP request from server variables.
-     *
+     * 通过服务器提供的变量创建一个Http请求实例
      * @return static
      */
     public static function capture()
     {
         static::enableHttpMethodParameterOverride();
-
+        // 在symfony框架的Request请求实例基础上创建一个Laravel请求实例
         return static::createFromBase(SymfonyRequest::createFromGlobals());
     }
 
@@ -412,7 +412,7 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
 
     /**
      * Create an Illuminate request from a Symfony instance.
-     *
+     * 在symfony框架Request请求实例的基础上创建一个Laravel请求实例
      * @param  \Symfony\Component\HttpFoundation\Request  $request
      * @return static
      */

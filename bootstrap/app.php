@@ -10,7 +10,7 @@
 | the IoC container for the system binding all of the various parts.
 |
 */
-
+// 实例化服务容器
 $app = new Illuminate\Foundation\Application(
     $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
 );
@@ -25,7 +25,8 @@ $app = new Illuminate\Foundation\Application(
 | incoming requests to this application from both the web and CLI.
 |
 */
-
+// 通过服务容器来实例化核心类对象
+// singleton的第一个参数为抽象接口, 第二个参数才是具体实现
 $app->singleton(
     Illuminate\Contracts\Http\Kernel::class,
     App\Http\Kernel::class
@@ -51,5 +52,5 @@ $app->singleton(
 | from the actual running of the application and sending responses.
 |
 */
-
+// 返回服务容器实例
 return $app;

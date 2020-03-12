@@ -505,6 +505,7 @@ class Builder
         // have been specified as needing to be eager loaded, which will solve the
         // n+1 query issue for the developers to avoid running a lot of queries.
         if (count($models = $builder->getModels($columns)) > 0) {
+            // 判断是否需要急切加载将避免开发者运行大量查询(n+1查询问题)
             $models = $builder->eagerLoadRelations($models);
         }
 
@@ -1084,14 +1085,17 @@ class Builder
 
     /**
      * Set the relationships that should be eager loaded.
-     *
+     * 如果有关联关系应当被设置并接加载
+     * 用于处理n+1问题
      * @param  mixed  $relations
      * @return $this
      */
     public function with($relations)
     {
+        // 解析关联关系
         $eagerLoad = $this->parseWithRelations(is_string($relations) ? func_get_args() : $relations);
 
+        // 将解析结果设置到$this->eagerLoad以供使用
         $this->eagerLoad = array_merge($this->eagerLoad, $eagerLoad);
 
         return $this;
@@ -1127,7 +1131,7 @@ class Builder
 
     /**
      * Parse a list of relations into individuals.
-     *
+     * 解析关联关系
      * @param  array  $relations
      * @return array
      */

@@ -235,7 +235,6 @@ abstract class Facade
         if (! $instance) {
             throw new RuntimeException('A facade root has not been set.');
         }
-
         return $instance->$method(...$args);
     }
 }

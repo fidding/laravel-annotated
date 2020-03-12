@@ -66,14 +66,14 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
     /**
      * The relations to eager load on every query.
-     *
+     * 渴望在每个查询上加载的关系, 用于解决n+1问题
      * @var array
      */
     protected $with = [];
 
     /**
      * The relationship counts that should be eager loaded on every query.
-     *
+     * 渴望在每个查询上加载的关系计数, 用于解决n+1问题
      * @var array
      */
     protected $withCount = [];
@@ -462,7 +462,10 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
     public static function all($columns = ['*'])
     {
         // 获取model的所有数据
-        // static::query()执行Eloquent查询构造器的实例化, get()获取数据封装并返回一个Eloquent Collection集合
+        // 执行Eloquent查询构造器的实例化, get()获取数据封装并返回一个Eloquent Collection集合
+
+        // static::query()生成一个实例, 用到了后期静态绑定: 即生成的实例是调用者本身
+        // @see https://learnku.com/articles/8964/understanding-of-static-binding-at-the-later-stage-of-php
         return static::query()->get(
             // 方便支持User::all(['id', 'name']);或User::all('id', 'name')这两种方式
             is_array($columns) ? $columns : func_get_args()
@@ -952,9 +955,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
      */
     public static function query()
     {
-        // 生成一个实例, 用到了后期静态绑定
-        // 即生成的实例是调用者本身, 如User则生成的是User模型
-        // @see https://learnku.com/articles/8964/understanding-of-static-binding-at-the-later-stage-of-php
+        // 生成一个Eloquent Builder查询构造器实例
         return (new static)->newQuery();
     }
 
@@ -965,7 +966,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
      */
     public function newQuery()
     {
-        // 生成Eloquent ORM查询构造器
+        // 生成Eloquent Builder查询构造器
         return $this->registerGlobalScopes($this->newQueryWithoutScopes());
     }
 
@@ -976,7 +977,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
      */
     public function newModelQuery()
     {
-        // 将查询构造器与当前model实例注入到Eloquent查询构造器, 并返回一个Eloquent查询构造器
+        // 将Query Builder查询构造器与当前model实例注入到Eloquent Builder查询构造器, 并返回Eloquent Builder查询构造器
         return $this->newEloquentBuilder(
             $this->newBaseQueryBuilder()
         )->setModel($this);
@@ -1016,6 +1017,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
     {
         // 获取查询构造器
         return $this->newModelQuery()
+                    // 关联关系预处理(用于解决n+1问题)
                     ->with($this->with)
                     ->withCount($this->withCount);
     }

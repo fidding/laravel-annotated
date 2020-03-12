@@ -30,16 +30,16 @@ class Kernel implements KernelContract
 
     /**
      * The bootstrap classes for the application.
-     *
+     * 接收请求所需准备工作, 执行时会调用各自类下的bootstrap()
      * @var array
      */
     protected $bootstrappers = [
-        \Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables::class,
-        \Illuminate\Foundation\Bootstrap\LoadConfiguration::class,
-        \Illuminate\Foundation\Bootstrap\HandleExceptions::class,
-        \Illuminate\Foundation\Bootstrap\RegisterFacades::class,
-        \Illuminate\Foundation\Bootstrap\RegisterProviders::class,
-        \Illuminate\Foundation\Bootstrap\BootProviders::class,
+        \Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables::class, // 环境监测
+        \Illuminate\Foundation\Bootstrap\LoadConfiguration::class, // 配置加载
+        \Illuminate\Foundation\Bootstrap\HandleExceptions::class, // 异常处理
+        \Illuminate\Foundation\Bootstrap\RegisterFacades::class, // 外观注册
+        \Illuminate\Foundation\Bootstrap\RegisterProviders::class, // 服务提供者注册
+        \Illuminate\Foundation\Bootstrap\BootProviders::class, // 启动服务
     ];
 
     /**
@@ -81,7 +81,7 @@ class Kernel implements KernelContract
 
     /**
      * Create a new HTTP kernel instance.
-     *
+     * 创建一个新的Http 核心实例(实例化kernel类时调用)
      * @param  \Illuminate\Contracts\Foundation\Application  $app
      * @param  \Illuminate\Routing\Router  $router
      * @return void
@@ -104,15 +104,16 @@ class Kernel implements KernelContract
 
     /**
      * Handle an incoming HTTP request.
-     *
+     * 处理一个输入的http请求
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function handle($request)
     {
         try {
+            // 启用添加csrf保护
             $request->enableHttpMethodParameterOverride();
-
+            // 通过路由传输请求实例
             $response = $this->sendRequestThroughRouter($request);
         } catch (Exception $e) {
             $this->reportException($e);
@@ -143,6 +144,7 @@ class Kernel implements KernelContract
 
         Facade::clearResolvedInstance('request');
 
+        // 执行准备工作, 包括环境监测、配置加载、异常处理、外观注册、服务提供者注册、启动服务等
         $this->bootstrap();
 
         return (new Pipeline($this->app))
@@ -153,12 +155,13 @@ class Kernel implements KernelContract
 
     /**
      * Bootstrap the application for HTTP requests.
-     *
+     * 针对请求执行一系列工作
      * @return void
      */
     public function bootstrap()
     {
         if (! $this->app->hasBeenBootstrapped()) {
+            // 将工作都注入到\Illuminate\Foundation\Appliation.php中的bootstrapWith方法并执行
             $this->app->bootstrapWith($this->bootstrappers());
         }
     }
